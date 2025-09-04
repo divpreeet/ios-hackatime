@@ -31,22 +31,6 @@ final class API {
         return data
     }
 
-    func statsData(apiKey: String) async throws -> Data {
-        guard let req = makeReq(path: "/api/v1/stats", apiKey: apiKey) else {
-            throw APIError.badURL
-        }
-        let (data, resp) = try await URLSession.shared.data(for: req)
-        try validateHTTP(resp: resp, data: data)
-        return data
-    }
-
-    func summariesData(apiKey: String, start: String, end: String) async throws -> Data {
-        let path = "/api/hackatime/v1/users/current/summaries?start=\(start)&end=\(end)"
-        guard let req = makeReq(path: path, apiKey: apiKey) else { throw APIError.badURL }
-        let (data, resp) = try await URLSession.shared.data(for: req)
-        try validateHTTP(resp: resp, data: data)
-        return data
-    }
 
     func heartbeatsData(apiKey: String, limit: Int = 100) async throws -> Data {
         let path = "/api/v1/my/heartbeats?limit=\(limit)"

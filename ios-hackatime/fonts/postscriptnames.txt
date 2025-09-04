@@ -1,0 +1,9 @@
+TRIAL Phantom Sans 0.8
+-- TRIALPhantomSans0.8-Italic
+-- TRIALPhantomSans0.8-Light
+-- TRIALPhantomSans0.8-Book
+-- TRIALPhantomSans0.8-BookItalic
+-- TRIALPhantomSans0.8-Medium
+-- TRIALPhantomSans0.8-Semibold
+-- TRIALPhantomSans0.8-Bold
+-- TRIALPhantomSans0.8-BoldItalic

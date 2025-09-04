@@ -29,9 +29,22 @@
 		516423342E65E7E700F7B502 /* ios-hackatimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-hackatimeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		51071F082E69ADC2005A1B22 /* Exceptions for "ios-hackatime" folder in "ios-hackatime" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 516423192E65E7D900F7B502 /* ios-hackatime */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5164231C2E65E7D900F7B502 /* ios-hackatime */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				51071F082E69ADC2005A1B22 /* Exceptions for "ios-hackatime" folder in "ios-hackatime" target */,
+			);
 			path = "ios-hackatime";
 			sourceTree = "<group>";
 		};
@@ -396,9 +409,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ios-hackatime/Preview Content\"";
-				DEVELOPMENT_TEAM = D6NHNKKM3P;
+				DEVELOPMENT_TEAM = 4324NGTGNT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ios-hackatime/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Hackatime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -411,7 +425,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.divpreet.ios-hackatime";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agamjeet.hackatime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -427,9 +441,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ios-hackatime/Preview Content\"";
-				DEVELOPMENT_TEAM = D6NHNKKM3P;
+				DEVELOPMENT_TEAM = 4324NGTGNT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ios-hackatime/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Hackatime;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -442,7 +457,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.divpreet.ios-hackatime";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agamjeet.hackatime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
