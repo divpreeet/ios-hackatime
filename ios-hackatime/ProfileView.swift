@@ -102,6 +102,8 @@ struct ProfileView: View {
                     Task { await loadAll() }
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(.hcGreen)
+                .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
                 
                 Button("Logout") {
                     Keychain.deleteApiKey()
@@ -112,7 +114,10 @@ struct ProfileView: View {
                     error = nil
                     onLogout()
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
+                .tint(.hcRed)
+                .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+                
             }
             .padding()
         }
