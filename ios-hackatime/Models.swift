@@ -1,50 +1,61 @@
 import Foundation
 
-// today 
-struct today: Codable {
-        let data: totalContainer 
+// today
+struct TodayResponse: Codable {
+    let data: TodayData
 }
 
-struct totalContainer: Codable {
-        let grand_total: grandTotal
+struct TodayData: Codable {
+    let grand_total: GrandTotal
 }
 
-struct grandTotal: Codable {
-        let text: String
-        let total_s: Double
+struct GrandTotal: Codable {
+    let text: String
+    let total_seconds: Double
 }
 
+// endpoint wrapper
+struct UserStatsResponse: Codable {
+    let data: UserStats
+}
 
 // stats
-
-struct userStats: Codable {
-        let user: String?
-        let total_s: Int?
-        let lang: [langStat]?
-        let projects: [projectStat]?
+struct UserStats: Codable {
+    let username: String?
+    let total_seconds: Double?
+    let languages: [LangStat]?
+    let projects: [ProjectStat]?
+    let os: [OSStat]?
 }
 
-struct langStat: Codable {
-        let name: String
-        let sec: Int
+struct LangStat: Codable {
+    let name: String
+    let total_seconds: Double
+    let text: String?
 }
 
-struct projectStat: Codable {
-        let name: String
-        let sec: Int
+struct ProjectStat: Codable {
+    let name: String
+    let total_seconds: Double
 }
 
 
-// raw data
-struct heartbeat: Codable, Identifiable {
-    let id: String
-    let time: String?
+struct OSStat: Codable {
+    let name: String
+    let total_seconds: Double
+}
+
+
+struct HeartbeatResp: Codable {
+    let heartbeats: [Heartbeat]
+}
+
+struct Heartbeat: Codable, Identifiable {
+    let id: Int
     let project: String?
-    let lang: String?
-    let entity: String?
 
-    enum codingKeys: String, CodingKey {
-            case id, time, project, lang, entity
-        }
-        
+    }
+    enum CodingKeys: String, CodingKey {
+        case id, time, project, language, entity
 }
+

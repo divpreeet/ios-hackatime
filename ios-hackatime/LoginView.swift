@@ -9,10 +9,12 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var inputKey = ""
+    @State private var inputSlack = ""
     @State private var saving = false
     @State private var error: String?
+    @State private var step: Int = 1
     
-    var login: (String) -> Void
+    var login: (String, String) -> Void
     
     var body: some View {
         VStack(spacing: 18) {
@@ -25,18 +27,32 @@ struct LoginView: View {
                     .font(.custom("TRIALPhantomSans0.8-BookItalic", size: 14))
                     .foregroundStyle(.hcMuted)
             }
-            SecureField("enter your hackatime api key", text: $inputKey)
-                .font(.custom("TRIALPhantomSans0.8-BoldItalic", size: 18))
-                .frame(maxWidth: 320, maxHeight: 48)
-                // .padding(.vertical, 16)
-                .padding(.horizontal, 24)
-                .background(.black)
-                .cornerRadius(12)
-                .foregroundStyle(.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color("hcBlue"))
-                )
+            
+            if step == 1{
+                SecureField("enter your hackatime api key", text: $inputKey)
+                    .font(.custom("TRIALPhantomSans0.8-BoldItalic", size: 18))
+                    .frame(maxWidth: 320, maxHeight: 48)
+                    .padding(.horizontal, 24)
+                    .background(.black)
+                    .cornerRadius(12)
+                    .foregroundStyle(.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color("hcBlue"))
+                    )
+            } else {
+                TextField("enter your slack username", text: $inputSlack)
+                    .font(.custom("TRIALPhantomSans0.8-BoldItalic", size: 18))
+                    .frame(maxWidth: 320, maxHeight: 48)
+                    .padding(.horizontal, 24)
+                    .background(.black)
+                    .cornerRadius(12)
+                    .foregroundStyle(.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color("hcGreen"))
+                    )
+            }
             
             if let error {
                 Text(error)
@@ -52,7 +68,7 @@ struct LoginView: View {
                     if saving {
                         ProgressView().scaleEffect(0.8)
                     }
-                    Text("Save and Continue")
+                    Text(step == 1 ? "Save API Key": "Save Username and Continue")
                         .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
                 }
                 .frame(maxWidth: .infinity)
@@ -75,21 +91,44 @@ struct LoginView: View {
             saving = true
             error = nil
         }
-        let trim = inputKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trim.isEmpty else {
+        if step == 1 {
+            let trim = inputKey.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trim.isEmpty else {
+                await MainActor.run {
+                    error = "Enter your API Key"
+                    saving = false
+                }
+                return
+            }
+            let ok = Keychain.saveApi(trim)
+            
             await MainActor.run {
-                error = "Enter the API Key"
                 saving = false
+                if ok {
+                    step = 2
+                } else {
+                    error = "Failed to save API Key"
+                }
             }
-            return
-        }
-        let ok = Keychain.save(apiKey: trim)
-        await MainActor.run {
-            if ok {
-                login(trim)
-            } else {
-                error = "Failed to save API Key"
+        } else {
+            let trim = inputSlack.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trim.isEmpty else {
+                await MainActor.run {
+                    error = "Enter your slack username"
+                    saving = false
+                }
+                return
+            }
+            let ok = Keychain.saveSlack(trim)
+            await MainActor.run {
+                saving = false
+                if ok {
+                    login(inputKey, trim)
+                } else {
+                    error = "Failed to save Slack Username"
+                }
             }
         }
+
     }
 }

@@ -32,12 +32,22 @@ final class API {
     }
 
 
-    func heartbeatsData(apiKey: String, limit: Int = 100) async throws -> Data {
+    func heartbeatsData(apiKey: String, limit: Int = 1) async throws -> Data {
         let path = "/api/v1/my/heartbeats?limit=\(limit)"
         guard let req = makeReq(path: path, apiKey: apiKey) else { throw APIError.badURL }
         let (data, resp) = try await URLSession.shared.data(for: req)
         try validateHTTP(resp: resp, data: data)
         return data
+    }
+    
+    func totalStats(apiKey: String, slackUsername: String) async throws -> UserStats {
+        let path = "/api/v1/users/\(slackUsername)/stats"
+        guard let req = makeReq(path: path, apiKey: apiKey) else {
+            throw APIError.badURL
+        }
+        let (data, resp) = try await URLSession.shared.data(for: req)
+        try validateHTTP(resp: resp, data: data)
+        return try JSONDecoder().decode(UserStatsResponse.self, from: data).data
     }
 
     private func validateHTTP(resp: URLResponse?, data: Data) throws {

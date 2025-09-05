@@ -8,30 +8,42 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var apiKey: String? = Keychain.read()
-    @State private var Login: Bool = Keychain.read() != nil
+    @State private var apiKey: String? = Keychain.readApi()
+    @State private var slack: String? = Keychain.readSlack()
+    @State private var Login: Bool = (Keychain.readApi() != nil && Keychain.readSlack() != nil)
 
     var body: some View {
-        Group {
-            if Login {
-                ProfileView()
-                    .transition(.move(edge: .trailing))
-            } else {
-                LoginView { key in
-                    let saved = Keychain.save(apiKey: key)
-                    if saved {
-                        apiKey = key
+            Group {
+                if Login {
+                    ProfileView(onLogout: {
+                        Keychain.deleteApiKey()
+                        Keychain.deleteSlack()
+                        apiKey = nil
+                        slack = nil
                         withAnimation {
-                            Login = true
+                            Login = false
+                        }
+                    })
+                    .transition(.move(edge: .trailing))
+                } else {
+                    LoginView { key, username in
+                        let savedApi = Keychain.saveApi(key)
+                        let savedSlack = Keychain.saveSlack(username)
+                        if savedApi && savedSlack {
+                            apiKey = key
+                            slack = username
+                            withAnimation {
+                                Login = true
+                            }
                         }
                     }
+                    .transition(.move(edge: .leading))
                 }
-                .transition(.move(edge: .leading))
+            }
+            .onAppear {
+                apiKey = Keychain.readApi()
+                slack = Keychain.readSlack()
+                Login = (apiKey != nil && slack != nil)
             }
         }
-        .onAppear {
-            apiKey = Keychain.read()
-            Login = apiKey != nil
-        }
     }
-}
