@@ -16,10 +16,42 @@ struct ProfileView: View {
     var body: some View {
         VStack(alignment:.leading, spacing: 0) {
             HStack{
-                Text("Keep Track of Your Coding Time")
-                    .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                    .foregroundStyle(.hcRed)
+                HStack {
+                    Text("Keep")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+                    Text("Track")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+                    Text("Keep")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+                    Text("Of")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+                    Text("Your")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.hcRed)
+                    Text("Coding")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+                    Text("Time")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                        .foregroundStyle(.white)
+
+                    
+                }
                 Spacer()
+                
+                Button {
+                    Task { await loadAll() }
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+                        .foregroundStyle(.hcRed)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.hcBg)
             }
             .padding(.top, 24)
             .padding(.horizontal, 16)
@@ -55,7 +87,7 @@ struct ProfileView: View {
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.hcMuted, lineWidth: 2)
+                                    .stroke(Color.hcBlue, lineWidth: 2)
                             )
                             VStack {
                                 Text("top language")
@@ -67,7 +99,7 @@ struct ProfileView: View {
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.hcMuted, lineWidth: 2)
+                                    .stroke(Color.hcRed, lineWidth: 2)
                             )
                             VStack {
                                 Text("recent project")
@@ -79,7 +111,7 @@ struct ProfileView: View {
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.hcMuted, lineWidth: 2)
+                                    .stroke(Color.hcGreen, lineWidth: 2)
                             )
                         }
                         .padding(.vertical, 24)
@@ -98,12 +130,7 @@ struct ProfileView: View {
             Spacer()
             
             HStack(spacing: 12) {
-                Button("Refresh") {
-                    Task { await loadAll() }
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hcGreen)
-                .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+
                 
                 Button("Logout") {
                     Keychain.deleteApiKey()
