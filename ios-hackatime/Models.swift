@@ -45,6 +45,9 @@ struct OSStat: Codable {
     let total_seconds: Double
 }
 
+struct trustFactor: Codable {
+    let trust_level: String
+}
 
 struct HeartbeatResp: Codable {
     let heartbeats: [Heartbeat]
@@ -53,6 +56,7 @@ struct HeartbeatResp: Codable {
 struct Heartbeat: Codable, Identifiable {
     let id: Int
     let project: String?
+    let entity: String?
 
     }
     enum CodingKeys: String, CodingKey {

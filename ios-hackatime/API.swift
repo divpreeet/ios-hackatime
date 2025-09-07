@@ -50,6 +50,16 @@ final class API {
         return try JSONDecoder().decode(UserStatsResponse.self, from: data).data
     }
 
+    func trustFactor(apiKey: String, slackUsername: String) async throws -> Data {
+        let path = "/api/v1/users/\(slackUsername)/trust_factor"
+        guard let req = makeReq(path: path, apiKey: apiKey) else {
+            throw APIError.badURL
+        }
+        let (data, resp) = try await URLSession.shared.data(for: req)
+        try validateHTTP(resp: resp, data: data)
+        return data
+    }
+    
     private func validateHTTP(resp: URLResponse?, data: Data) throws {
         guard let http = resp as? HTTPURLResponse else { throw APIError.invalidResponse }
         #if DEBUG

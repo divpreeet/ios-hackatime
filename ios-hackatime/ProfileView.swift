@@ -11,8 +11,8 @@ struct ProfileView: View {
     @State private var todayS: Int = 0
     @State private var stats: UserStats?
     @State private var recentP: String = "-"
+    @State private var trustF: trustFactor?
     var onLogout: () -> Void
-    
     var body: some View {
         VStack(alignment:.leading, spacing: 0) {
             HStack{
@@ -73,7 +73,7 @@ struct ProfileView: View {
                     }
                     
                     if let stats = stats {
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                             VStack {
                                 Text("total time")
                                     .font(.caption)
@@ -113,6 +113,23 @@ struct ProfileView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.hcGreen, lineWidth: 2)
                             )
+                            
+                            if let trust = trustF {
+                                VStack {
+                                    Text("trust factor")
+                                        .font(.caption)
+                                        .foregroundColor(.hcMuted)
+                                    Text(trust.trust_level)
+                                        .font(.headline)
+                                        
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.hcYellow, lineWidth: 2)
+                                )
+                            }
+                            
                         }
                         .padding(.vertical, 24)
                     }
@@ -201,6 +218,15 @@ struct ProfileView: View {
             await MainActor.run { recentP = "-" }
         }
         await MainActor.run { loading = false }
+        
+        // total stats
+        do {
+            let trust = try await API.shared.trustFactor(apiKey: key, slackUsername: slack)
+            let decoded = try JSONDecoder().decode(trustFactor.self, from: trust)
+            await MainActor.run { trustF = decoded}
+        } catch {
+            await MainActor.run {trustF = nil }
+        }
     }
 
     // today time with seconds
