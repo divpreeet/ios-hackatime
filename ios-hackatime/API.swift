@@ -60,6 +60,14 @@ final class API {
         return data
     }
     
+    func getEditor(from heartbeats: [Heartbeat]) -> [EditorStat] {
+        let counts = Dictionary(grouping: heartbeats, by: { $0.editor ?? "Unknown" })
+            .mapValues { $0.count }
+            .sorted { $0.value > $1.value }
+            .prefix(5)
+        return counts.map { EditorStat(editor: $0.key, count: $0.value) }
+    }
+    
     private func validateHTTP(resp: URLResponse?, data: Data) throws {
         guard let http = resp as? HTTPURLResponse else { throw APIError.invalidResponse }
         #if DEBUG

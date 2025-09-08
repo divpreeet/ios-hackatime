@@ -28,10 +28,10 @@ struct UserStats: Codable {
     let os: [OSStat]?
 }
 
-struct LangStat: Codable {
-    let name: String
+struct LangStat: Codable, Identifiable{
+    let id = UUID()
     let total_seconds: Double
-    let text: String?
+    let name: String?
 }
 
 struct ProjectStat: Codable {
@@ -49,6 +49,12 @@ struct trustFactor: Codable {
     let trust_level: String
 }
 
+struct EditorStat: Identifiable {
+    let id = UUID()
+    let editor: String
+    let count: Int
+}
+
 struct HeartbeatResp: Codable {
     let heartbeats: [Heartbeat]
 }
@@ -57,6 +63,7 @@ struct Heartbeat: Codable, Identifiable {
     let id: Int
     let project: String?
     let entity: String?
+    let editor: String?
 
     }
     enum CodingKeys: String, CodingKey {

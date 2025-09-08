@@ -1,5 +1,6 @@
 import SwiftUI
 import Foundation
+import Charts
 
 struct ProfileView: View {
     @State private var apiKey: String = Keychain.readApi() ?? ""
@@ -12,6 +13,9 @@ struct ProfileView: View {
     @State private var stats: UserStats?
     @State private var recentP: String = "-"
     @State private var trustF: trustFactor?
+    @State private var editorStats: [EditorStat] = []
+
+    
     var onLogout: () -> Void
     var body: some View {
         VStack(alignment:.leading, spacing: 0) {
@@ -43,18 +47,39 @@ struct ProfileView: View {
                 }
                 Spacer()
                 
-                Button {
-                    Task { await loadAll() }
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
-                        .foregroundStyle(.hcRed)
+                HStack {
+                    
+                    Button {
+                        Task { await loadAll() }
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+                            .foregroundStyle(.hcBlue)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.hcBg)
+                    }
+                    .padding(.top, 24)
+                    .padding(.horizontal, 16)
+                    
+                    Button{
+                        Keychain.deleteApiKey()
+                        Keychain.deleteSlack()
+                        apiKey = ""
+                        todayT = "-"
+                        totalT = "-"
+                        error = nil
+                        onLogout()
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+                            .foregroundStyle(.hcRed)
+                        
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.hcBg)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.hcBg)
-            }
-            .padding(.top, 24)
-            .padding(.horizontal, 16)
+
             
             if loading {
                 ProgressView()
@@ -132,6 +157,33 @@ struct ProfileView: View {
                             
                         }
                         .padding(.vertical, 24)
+                        
+                        let languages = stats.languages?
+                            .sorted { ($0.total_seconds ?? 0) > ($1.total_seconds ?? 0) }
+                            .prefix(10)
+                            .map {
+                                LangStat(total_seconds: $0.total_seconds ?? 0, name: $0.name ?? "-")
+                            } ?? []
+                        
+                        
+                        HStack(spacing: 8){
+                            VStack{
+                                Text("most used languages")
+                                    .font(.caption)
+                                    .foregroundColor(.hcMuted)
+                                
+                                languageChart(languages: languages)
+                            }
+                            
+                            VStack{
+                                Text("recently used editors")
+                                    .font(.caption)
+                                    .foregroundColor(.hcMuted)
+                                
+                                editorChart(editor: editorStats)
+                            }
+                        }
+
                     }
                 }
                 .padding()
@@ -148,19 +200,7 @@ struct ProfileView: View {
             
             HStack(spacing: 12) {
 
-                
-                Button("Logout") {
-                    Keychain.deleteApiKey()
-                    Keychain.deleteSlack()
-                    apiKey = ""
-                    todayT = "-"
-                    totalT = "-"
-                    error = nil
-                    onLogout()
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hcRed)
-                .font(.custom("TRIALPhantomSans0.8-Bold", size: 18))
+
                 
             }
             .padding()
@@ -219,13 +259,24 @@ struct ProfileView: View {
         }
         await MainActor.run { loading = false }
         
-        // total stats
+        // trust factor
         do {
             let trust = try await API.shared.trustFactor(apiKey: key, slackUsername: slack)
             let decoded = try JSONDecoder().decode(trustFactor.self, from: trust)
             await MainActor.run { trustF = decoded}
         } catch {
             await MainActor.run {trustF = nil }
+        }
+        
+        // editors
+        
+        do {
+            let hbData = try await API.shared.heartbeatsData(apiKey: apiKey, limit: 100)
+            let heartbeats = try JSONDecoder().decode(HeartbeatResp.self, from: hbData).heartbeats
+            let stats = API.shared.getEditor(from: heartbeats)
+            await MainActor.run { editorStats = stats }
+        } catch {
+            await MainActor.run { editorStats = [] }
         }
     }
 
