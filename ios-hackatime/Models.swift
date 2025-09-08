@@ -49,7 +49,7 @@ struct trustFactor: Codable {
     let trust_level: String
 }
 
-struct EditorStat: Identifiable {
+struct EditorStat: Codable, Identifiable {
     let id = UUID()
     let editor: String
     let count: Int
