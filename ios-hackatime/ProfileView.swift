@@ -25,29 +25,19 @@ struct ProfileView: View {
     var body: some View {
         VStack(alignment:.leading, spacing: 0) {
             HStack{
-                HStack {
+                HStack(spacing: 8) {
                     Text("Keep")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
                     Text("Track")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
-                    Text("Keep")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
                     Text("Of")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
                     Text("Your")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
                         .foregroundStyle(.hcRed)
                     Text("Coding")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
                     Text("Time")
-                        .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
-                        .foregroundStyle(.white)
                 }
+                .font(.custom("TRIALPhantomSans0.8-Bold", size: 32))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
                 Spacer()
                 Button{
                     Keychain.deleteApiKey()
